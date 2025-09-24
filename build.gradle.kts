@@ -45,9 +45,5 @@ tasks {
          * remove unneeded transitive dependencies
          * https://gradleup.com/shadow/configuration/dependencies/#filtering-dependencies
          */
-//        dependencies {
-//            exclude(dependency(":error_prone_annotations:.*"))
-//            exclude(dependency(":jspecify:.*"))
-//        }
     }
 }

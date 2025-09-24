@@ -1,4 +1,4 @@
-package org.example;
+package org.icetank;
 
 // The constants are replaced before compilation
 public class BuildConstants {

@@ -1,0 +1,23 @@
+package org.icetank;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * Example configuration POJO.
+ * <p>
+ * Configurations are saved and loaded to JSON files
+ * <p>
+ * All fields should be public and mutable.
+ * <p>
+ * Fields to static inner classes generate nested JSON objects.
+ */
+public class ExtraPearlLoaderConfig {
+    public final PearlLoaderConfig pearlLoader = new PearlLoaderConfig();
+    public static class PearlLoaderConfig {
+        public boolean enabled = true;
+        public Map<UUID, List<String>> allowed = Map.of();
+        public boolean allowNoiseAfterPearl = true;
+    }
+}
