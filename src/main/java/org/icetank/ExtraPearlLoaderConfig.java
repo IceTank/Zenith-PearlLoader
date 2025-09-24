@@ -1,5 +1,6 @@
 package org.icetank;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -17,7 +18,7 @@ public class ExtraPearlLoaderConfig {
     public final PearlLoaderConfig pearlLoader = new PearlLoaderConfig();
     public static class PearlLoaderConfig {
         public boolean enabled = true;
-        public Map<UUID, List<String>> allowed = Map.of();
+        public Map<UUID, List<String>> allowed = new HashMap<>();
         public boolean allowNoiseAfterPearl = true;
     }
 }
