@@ -18,7 +18,9 @@ public class ExtraPearlLoaderConfig {
     public final PearlLoaderConfig pearlLoader = new PearlLoaderConfig();
     public static class PearlLoaderConfig {
         public boolean enabled = true;
+        /** Map of player UUIDs to list of allowed pearl IDs */
         public Map<UUID, List<String>> allowed = new HashMap<>();
-        public boolean allowNoiseAfterPearl = true;
+        /** Allow the module to load a pearl id that is equal to the username */
+        public boolean guessPearlId = true;
     }
 }
