@@ -8,8 +8,8 @@ import org.icetank.command.PearlLoaderCommand;
 import org.icetank.module.ExtraPearlModule;
 
 @Plugin(
-    id = "extra-pearl-loader",
-    version = BuildConstants.VERSION,
+    id = org.ic3tank.BuildConstants.PLUGIN_ID,
+    version = org.ic3tank.BuildConstants.VERSION,
     description = "ZenithProxy Extra Pearl Loader Plugin",
     url = "https://github.com/rfresh2/ZenithProxyExamplePlugin",
     authors = {"icetank"},
