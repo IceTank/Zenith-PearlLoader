@@ -35,7 +35,8 @@ public class PearlLoaderCommand extends Command {
                         "on/off",
                         "toggle on/off",
                         "info",
-                        "allow add/remove/list <player> <pearlId>"
+                        "allow add/remove/list <player> <pearlId>",
+                        "guessPearlId on/off"
                 )
                 .aliases("epl", "pl++")
                 .build();
