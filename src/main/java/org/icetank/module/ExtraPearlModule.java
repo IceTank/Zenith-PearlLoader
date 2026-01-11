@@ -23,6 +23,8 @@ public class ExtraPearlModule extends Module {
         return PLUGIN_CONFIG.pearlLoader.enabled;
     }
 
+    public static final List<String> loadSynonyms = List.of("load", "tp", "I AM FUCKING DYING PLEASE LOAD MY PEARL".toLowerCase());
+
     @Override
     public List<EventConsumer<?>> registerEvents() {
         return List.of(
@@ -34,7 +36,7 @@ public class ExtraPearlModule extends Module {
         if (!PLUGIN_CONFIG.pearlLoader.enabled || event.outgoing()) return;
 
         String msg = event.message().trim().toLowerCase();
-        if (!msg.startsWith("load")) return;
+        if (!loadSynonyms.stream().anyMatch(msg::startsWith)) return;
 
         var sender = event.sender();
         String name = sender.getName();
