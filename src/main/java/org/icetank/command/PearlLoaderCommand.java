@@ -43,7 +43,7 @@ public class PearlLoaderCommand extends Command {
 
     @Override
     public LiteralArgumentBuilder<CommandContext> register() {
-        return command("examplePlugin")
+        return command("extraPearlLoader")
                 .then(argument("toggle", toggle()).executes(c -> {
                     PLUGIN_CONFIG.pearlLoader.enabled = getToggle(c, "toggle");
                     // make sure to sync so the module is actually toggled
@@ -59,9 +59,7 @@ public class PearlLoaderCommand extends Command {
                             .addField("Configured Players", String.valueOf(PLUGIN_CONFIG.pearlLoader.allowed.size()));
                 }))
                 .then(literal("allow")
-                        .then(literal("add")
-                                .then(argument("player", wordWithChars())
-                                        .then(argument("pearlId", wordWithChars()).executes(c -> {
+                        .then(literal("add").then(argument("player", wordWithChars()).then(argument("pearlId", wordWithChars()).executes(c -> {
                                             String player = c.getArgument("player", String.class);
                                             String pearlId = c.getArgument("pearlId", String.class);
                                             Optional<MinetoolsUuidResponse> result =
@@ -87,9 +85,7 @@ public class PearlLoaderCommand extends Command {
                                         }))
                                 )
                         )
-                        .then(literal("del")
-                                .then(argument("player", wordWithChars())
-                                        .then(argument("pearlId", wordWithChars()).executes(c -> {
+                        .then(literal("del").then(argument("player", wordWithChars()).then(argument("pearlId", wordWithChars()).executes(c -> {
                                             String player = c.getArgument("player", String.class);
                                             String pearlId = c.getArgument("pearlId", String.class);
                                             Optional<MinetoolsUuidResponse> result =
@@ -130,8 +126,7 @@ public class PearlLoaderCommand extends Command {
                                         }))
                                 )
                         )
-                        .then(literal("list")
-                                .then(argument("player", wordWithChars()).executes(c -> {
+                        .then(literal("list").then(argument("player", wordWithChars()).executes(c -> {
                                     String player = c.getArgument("player", String.class);
                                     Optional<MinetoolsUuidResponse> result =
                                             MinetoolsApi.INSTANCE.getProfileFromUsername(player);
@@ -149,6 +144,12 @@ public class PearlLoaderCommand extends Command {
                                     }
                                 }))
                         )
+                )
+                .then(literal("guessPearlId").then(argument("toggle", toggle()).executes(c -> {
+                            PLUGIN_CONFIG.pearlLoader.guessPearlId = getToggle(c, "toggle");
+                            c.getSource().getEmbed()
+                                    .title("Guess Pearl ID " + toggleStrCaps(PLUGIN_CONFIG.pearlLoader.guessPearlId));
+                        }))
                 );
     }
 
@@ -157,6 +158,7 @@ public class PearlLoaderCommand extends Command {
         embed
                 .primaryColor()
                 .addField("Enabled", toggleStr(PLUGIN_CONFIG.pearlLoader.enabled))
-                .addField("Configured Players", String.valueOf(PLUGIN_CONFIG.pearlLoader.allowed.size()));
+                .addField("Configured Players", String.valueOf(PLUGIN_CONFIG.pearlLoader.allowed.size()))
+                .addField("Guess Pearl ID", toggleStr(PLUGIN_CONFIG.pearlLoader.guessPearlId));
     }
 }
