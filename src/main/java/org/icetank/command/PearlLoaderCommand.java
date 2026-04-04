@@ -8,6 +8,9 @@ import com.zenith.command.api.CommandUsage;
 import com.zenith.discord.Embed;
 import com.zenith.feature.api.minetools.MinetoolsApi;
 import com.zenith.feature.api.minetools.model.MinetoolsUuidResponse;
+import com.zenith.feature.api.mojang.MojangApi;
+import com.zenith.feature.api.mojang.model.MojangProfileResponse;
+import org.icetank.ExtraPearlLoaderConfig;
 import org.icetank.module.ExtraPearlModule;
 
 import java.util.List;
@@ -36,10 +39,25 @@ public class PearlLoaderCommand extends Command {
                         "toggle on/off",
                         "info",
                         "allow add/remove/list <player> <pearlId>",
-                        "guessPearlId on/off"
+                        "guessPearlId on/off",
+                        "apiProvider Mojang/Minetools"
                 )
                 .aliases("epl", "pl++")
                 .build();
+    }
+
+    private Optional<UUID> getPlayerUuid(String player) {
+        switch (PLUGIN_CONFIG.pearlLoader.apiProvider) {
+            case MOJANG -> {
+                Optional<MojangProfileResponse> result = MojangApi.INSTANCE.getProfile(player);
+                return result.map(MojangProfileResponse::uuid);
+            }
+            case MINETOOLS -> {
+                Optional<MinetoolsUuidResponse> result = MinetoolsApi.INSTANCE.getProfileFromUsername(player);
+                return result.map(MinetoolsUuidResponse::uuid);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + PLUGIN_CONFIG.pearlLoader.apiProvider);
+        }
     }
 
     @Override
@@ -63,11 +81,10 @@ public class PearlLoaderCommand extends Command {
                         .then(literal("add").then(argument("player", wordWithChars()).then(argument("pearlId", wordWithChars()).executes(c -> {
                                             String player = c.getArgument("player", String.class);
                                             String pearlId = c.getArgument("pearlId", String.class);
-                                            Optional<MinetoolsUuidResponse> result =
-                                                    MinetoolsApi.INSTANCE.getProfileFromUsername(player);
+                                            Optional<UUID> result = getPlayerUuid(player);
 
                                             if (result.isPresent()) {
-                                                UUID uuid = result.get().uuid();
+                                                UUID uuid = result.get();
                                                 List<String> pearls = PLUGIN_CONFIG.pearlLoader.allowed.computeIfAbsent(uuid, k -> new java.util.ArrayList<>());
                                                 if (pearls.contains(pearlId)) {
                                                     c.getSource().getEmbed()
@@ -151,7 +168,14 @@ public class PearlLoaderCommand extends Command {
                             c.getSource().getEmbed()
                                     .title("Guess Pearl ID " + toggleStrCaps(PLUGIN_CONFIG.pearlLoader.guessPearlId));
                         }))
-                );
+                )
+                .then(literal("apiProvider").then(argument("provider", enumStrings(ExtraPearlLoaderConfig.ApiProvider.values())).executes(c -> {
+                            String providerStr = c.getArgument("provider", String.class);
+                            ExtraPearlLoaderConfig.ApiProvider provider = ExtraPearlLoaderConfig.ApiProvider.valueOf(providerStr.toUpperCase());
+                            PLUGIN_CONFIG.pearlLoader.apiProvider = provider;
+                            c.getSource().getEmbed()
+                                    .title("API Provider set to " + provider);
+                })));
     }
 
     @Override

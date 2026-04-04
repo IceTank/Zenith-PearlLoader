@@ -22,5 +22,11 @@ public class ExtraPearlLoaderConfig {
         public Map<UUID, List<String>> allowed = new HashMap<>();
         /** Allow the module to load a pearl id that is equal to the username */
         public boolean guessPearlId = true;
+        public ApiProvider apiProvider = ApiProvider.MOJANG;
+    }
+
+    public enum ApiProvider {
+        MOJANG,
+        MINETOOLS
     }
 }
